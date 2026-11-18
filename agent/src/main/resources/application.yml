@@ -1,0 +1,29 @@
+# 通道：mock(开发默认，无key可跑) | cloud-glm(调试默认真通道) | local-ollama(正式)
+webagent:
+  llm:
+    channel: mock
+    cloud-glm:
+      base-url: https://open.bigmodel.cn/api/paas/v4
+      model: glm-4-flash            # 以 ADR-003 选择记录为准
+      # key 注入（二选一，绝不写入本文件入库）：环境变量 ZHIPUAI_API_KEY / application-local.yml
+    ollama:
+      base-url: http://localhost:11434
+      model: qwen2.5-coder:7b
+    timeout-seconds: 60
+    retry: 1
+  confidence:
+    confirmed-threshold: 0.75
+    uncertain-threshold: 0.40
+  intent-filter:
+    l2-enabled: false
+  data-dir: agent/data              # 白名单/会话/拦截日志（agent.db）
+  apktool:
+    jar-path: D:/dev/apktool/apktool.jar   # 开发期宿主机直调；正式期 Docker 沙箱（ADR-007）
+    timeout-seconds: 120
+  skill-apk:
+    data-dir: skill/data            # work-{targetId}/ 解码目录；index-{targetId}.db 索引库
+  skills-dir: skill/src/main/resources/skills   # ADR-010 声明式扫描
+  annotate:
+    llm-package-notes: true         # FR-09 包级注释是否用 LLM（规则骨架恒可用）
+server:
+  port: 8000
